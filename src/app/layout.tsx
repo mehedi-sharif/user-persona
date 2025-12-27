@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Brain, Users, LayoutDashboard, Search } from "lucide-react";
+import "./custom.scss";
+import { Brain, Users, LayoutDashboard, Search, Database } from "lucide-react";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} min-h-screen bg-background text-foreground antialiased`}>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning className={`${inter.className} min-h-screen bg-background text-foreground antialiased`}>
         <div className="flex min-h-screen">
           {/* Sidebar */}
           <aside className="w-64 border-r bg-card/50 backdrop-blur-xl flex flex-col fixed inset-y-0">
@@ -44,9 +45,16 @@ export default function RootLayout({
                 <LayoutDashboard className="w-5 h-5" />
                 <span className="font-medium">Dashboard</span>
               </Link>
+              <Link
+                href="/data"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent transition-colors text-muted-foreground"
+              >
+                <Database className="w-5 h-5" />
+                <span className="font-medium">Data</span>
+              </Link>
             </nav>
 
-            <div className="p-6 border-t border-border/50">
+            <div className="p-6 border-border/50">
               <div className="flex items-center gap-3 px-2">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-purple-500" />
                 <div className="flex flex-col">

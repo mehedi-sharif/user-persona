@@ -23,6 +23,7 @@ import {
     ChevronsLeft,
     ChevronsRight
 } from "lucide-react"
+import { useRouter, usePathname, useSearchParams } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -46,11 +47,19 @@ import {
 
 export function DataTable<TData, TValue>({
     columns,
-    data
+    data,
+    pageCount,
+    currentPage = 1
 }: {
     columns: ColumnDef<TData, TValue>[],
-    data: TData[]
+    data: TData[],
+    pageCount?: number,
+    currentPage?: number
 }) {
+    const router = useRouter()
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
+
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -72,10 +81,16 @@ export function DataTable<TData, TValue>({
             columnFilters,
             columnVisibility,
             rowSelection,
+            pagination: {
+                pageIndex: currentPage - 1,
+                pageSize: 100,
+            }
         },
+        manualPagination: pageCount !== undefined,
+        pageCount: pageCount ?? -1,
         initialState: {
             pagination: {
-                pageSize: 7,
+                pageSize: 100,
             },
         },
     })
@@ -109,8 +124,16 @@ export function DataTable<TData, TValue>({
                             variant="outline"
                             size="icon"
                             className="h-9 w-9 border-gray-200 rounded-md bg-white"
-                            onClick={() => table.setPageIndex(0)}
-                            disabled={!table.getCanPreviousPage()}
+                            onClick={() => {
+                                if (pageCount !== undefined) {
+                                    const params = new URLSearchParams(searchParams.toString())
+                                    params.set("page", "1")
+                                    router.push(pathname + "?" + params.toString())
+                                } else {
+                                    table.setPageIndex(0)
+                                }
+                            }}
+                            disabled={pageCount !== undefined ? currentPage <= 1 : !table.getCanPreviousPage()}
                         >
                             <ChevronsLeft className="h-4 w-4 text-gray-600" />
                         </Button>
@@ -118,8 +141,16 @@ export function DataTable<TData, TValue>({
                             variant="outline"
                             size="icon"
                             className="h-9 w-9 border-gray-200 rounded-md bg-white"
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
+                            onClick={() => {
+                                if (pageCount !== undefined) {
+                                    const params = new URLSearchParams(searchParams.toString())
+                                    params.set("page", String(currentPage - 1))
+                                    router.push(pathname + "?" + params.toString())
+                                } else {
+                                    table.previousPage()
+                                }
+                            }}
+                            disabled={pageCount !== undefined ? currentPage <= 1 : !table.getCanPreviousPage()}
                         >
                             <ChevronLeft className="h-4 w-4 text-gray-600" />
                         </Button>
@@ -132,8 +163,16 @@ export function DataTable<TData, TValue>({
                             variant="outline"
                             size="icon"
                             className="h-9 w-9 border-gray-200 rounded-md bg-white"
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
+                            onClick={() => {
+                                if (pageCount !== undefined) {
+                                    const params = new URLSearchParams(searchParams.toString())
+                                    params.set("page", String(currentPage + 1))
+                                    router.push(pathname + "?" + params.toString())
+                                } else {
+                                    table.nextPage()
+                                }
+                            }}
+                            disabled={pageCount !== undefined ? currentPage >= (pageCount ?? 1) : !table.getCanNextPage()}
                         >
                             <ChevronRight className="h-4 w-4 text-gray-600" />
                         </Button>
@@ -141,8 +180,16 @@ export function DataTable<TData, TValue>({
                             variant="outline"
                             size="icon"
                             className="h-9 w-9 border-gray-200 rounded-md bg-white"
-                            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                            disabled={!table.getCanNextPage()}
+                            onClick={() => {
+                                if (pageCount !== undefined) {
+                                    const params = new URLSearchParams(searchParams.toString())
+                                    params.set("page", String(pageCount))
+                                    router.push(pathname + "?" + params.toString())
+                                } else {
+                                    table.setPageIndex(table.getPageCount() - 1)
+                                }
+                            }}
+                            disabled={pageCount !== undefined ? currentPage >= (pageCount ?? 1) : !table.getCanNextPage()}
                         >
                             <ChevronsRight className="h-4 w-4 text-gray-600" />
                         </Button>

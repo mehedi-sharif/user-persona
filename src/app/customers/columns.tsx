@@ -13,6 +13,8 @@ import {
     Sheet,
     SheetContent,
     SheetTrigger,
+    SheetTitle,
+    SheetDescription,
 } from "@/components/ui/sheet"
 import { CustomerSheet } from "@/components/customer-sheet"
 
@@ -32,9 +34,11 @@ export const columns: ColumnDef<Customer>[] = [
             return (
                 <Sheet>
                     <SheetTrigger asChild>
-                        <div className="flex items-center gap-4 py-2 cursor-pointer hover:bg-black/5 rounded-lg transition-colors -ml-2 px-2">
-                            <Avatar className="h-12 w-12 border-2 border-border shadow-sm">
-                                <AvatarImage src={customer.image || ""} alt={name} className="object-cover" />
+                        <div className="flex items-center gap-4 py-2 cursor-pointer rounded-lg transition-colors -ml-2 px-2">
+                            <Avatar className="h-12 w-12 border-1 border-border avatar">
+                                {customer.image && (
+                                    <AvatarImage src={customer.image} alt={name} className="object-cover" />
+                                )}
                                 <AvatarFallback className="bg-primary/5 text-primary font-bold">{initials}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col gap-0.5">
@@ -43,7 +47,11 @@ export const columns: ColumnDef<Customer>[] = [
                             </div>
                         </div>
                     </SheetTrigger>
-                    <SheetContent side="right" className="sm:max-w-3xl overflow-y-auto bg-gray-50/50 p-8">
+                    <SheetContent side="right" className="sm:max-w-3xl overflow-y-auto bg-white p-8">
+                        <SheetTitle className="sr-only">Customer Details - {name}</SheetTitle>
+                        <SheetDescription className="sr-only">
+                            Detailed information and activity history for {name}.
+                        </SheetDescription>
                         <CustomerSheet customer={customer} />
                     </SheetContent>
                 </Sheet>
@@ -57,7 +65,7 @@ export const columns: ColumnDef<Customer>[] = [
             const date = row.getValue("createdAt") as string
             if (!date) return <span className="text-sm text-muted-foreground">N/A</span>
             return (
-                <span className="text-[14px] font-medium text-foreground">
+                <span suppressHydrationWarning className="text-[14px] font-medium text-foreground">
                     {new Date(date).toLocaleDateString('en-GB', {
                         day: '2-digit',
                         month: 'short',
