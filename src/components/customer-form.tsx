@@ -249,10 +249,10 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                         </CardContent>
                     </Card>
 
-                    <Card className="border-primary/20 bg-primary/5">
+                    <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <Sparkles className="w-4 h-4 text-primary" /> Persona Analysis
+                                <Sparkles className="w-4 h-4" /> Persona Analysis
                             </CardTitle>
                             <CardDescription>Generated summary based on research.</CardDescription>
                         </CardHeader>
@@ -261,13 +261,13 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                                 <Label htmlFor="summary">Persona Summary</Label>
                                 <Textarea
                                     id="summary"
-                                    className="min-h-[200px] border-primary/10 transition-all focus:border-primary"
+                                    className="min-h-[200px]"
                                     value={formData.persona_summary || ""}
                                     onChange={e => setFormData(prev => ({ ...prev, persona_summary: e.target.value }))}
                                     placeholder="The AI will generate this once you save..."
                                 />
                             </div>
-                            <Button type="button" variant="outline" className="w-full gap-2 border-primary/20 text-primary">
+                            <Button type="button" variant="outline" className="w-full gap-2">
                                 <Brain className="w-4 h-4" /> Generate with AI
                             </Button>
                         </CardContent>

@@ -22,9 +22,9 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${inter.className} min-h-screen bg-background text-foreground antialiased`}>
         <div className="flex min-h-screen">
           {/* Sidebar */}
-          <aside className="w-64 border-r bg-card/50 backdrop-blur-xl flex flex-col fixed inset-y-0">
+          <aside className="w-64 border-r bg-card flex flex-col fixed inset-y-0">
             <div className="p-6 flex items-center gap-2 mb-8">
-              <div className="p-2 bg-primary rounded-xl">
+              <div className="p-2 bg-primary rounded-lg">
                 <Brain className="w-6 h-6 text-primary-foreground" />
               </div>
               <span className="font-bold text-xl tracking-tight">SitePins</span>
@@ -54,12 +54,14 @@ export default function RootLayout({
               </Link>
             </nav>
 
-            <div className="p-6 border-border/50">
+            <div className="p-6 border-t">
               <div className="flex items-center gap-3 px-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-purple-500" />
+                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                  <span className="text-xs font-semibold">MA</span>
+                </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold">Marketer AI</span>
-                  <span className="text-xs text-muted-foreground underline decoration-primary/30 underline-offset-2">Pro Plan</span>
+                  <span className="text-xs text-muted-foreground">Pro Plan</span>
                 </div>
               </div>
             </div>

@@ -2,7 +2,10 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Customer } from "@/types/customer"
+import Link from "next/link"
+import { Edit } from "lucide-react"
 
 import {
     Avatar,
@@ -107,6 +110,29 @@ export const columns: ColumnDef<Customer>[] = [
                     >
                         {isPaid ? 'Paid' : 'No Purchase'}
                     </Badge>
+                </div>
+            )
+        },
+    },
+    {
+        id: "actions",
+        header: () => <div className="text-right pr-4">Actions</div>,
+        cell: ({ row }) => {
+            const customer = row.original
+
+            return (
+                <div className="flex justify-end pr-4">
+                    <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 gap-2 hover:bg-primary/10 hover:text-primary"
+                    >
+                        <Link href={`/customers/${customer._id}/edit`}>
+                            <Edit className="h-4 w-4" />
+                            Edit
+                        </Link>
+                    </Button>
                 </div>
             )
         },

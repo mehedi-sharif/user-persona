@@ -46,15 +46,15 @@ export default async function CustomerDetailsPage({
         <div className="space-y-8 pb-12">
             <div className="flex items-start justify-between">
                 <div className="flex gap-6 items-center">
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center border border-primary/20 shadow-inner">
-                        <Brain className="w-10 h-10 text-primary" />
+                    <div className="w-20 h-20 rounded-lg bg-muted flex items-center justify-center border">
+                        <Brain className="w-10 h-10 text-muted-foreground" />
                     </div>
                     <div>
                         <div className="flex items-center gap-3">
                             <h1 className="text-4xl font-bold tracking-tight">{customer.full_name}</h1>
-                            <Badge variant="outline" className="h-6">Persona ID: {customer._id.slice(0, 8)}</Badge>
+                            <Badge variant="outline" className="h-6">ID: {customer._id.slice(0, 8)}</Badge>
                         </div>
-                        <p className="text-xl text-muted-foreground font-medium mt-1">{customer.job_title || "Strategic Consultant"}</p>
+                        <p className="text-xl text-muted-foreground font-medium mt-1">{customer.job_title || "No title"}</p>
                         <div className="flex gap-4 mt-3">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Mail className="w-4 h-4" />
@@ -75,7 +75,7 @@ export default async function CustomerDetailsPage({
             </div>
 
             <Tabs defaultValue="overview" className="space-y-8">
-                <TabsList className="bg-card/50 border h-12 p-1">
+                <TabsList className="bg-muted h-12 p-1">
                     <TabsTrigger value="overview" className="px-8 flex gap-2">
                         <LayoutDashboard className="w-4 h-4" /> Overview
                     </TabsTrigger>
@@ -88,9 +88,9 @@ export default async function CustomerDetailsPage({
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-6">
-                    <Card className="border-none shadow-xl bg-gradient-to-br from-card to-accent/5 overflow-hidden">
-                        <CardHeader className="border-b bg-muted/30 pb-4">
-                            <div className="flex items-center gap-2 text-primary">
+                    <Card>
+                        <CardHeader className="border-b">
+                            <div className="flex items-center gap-2">
                                 <Brain className="w-5 h-5" />
                                 <CardTitle className="text-lg">Persona Summary</CardTitle>
                             </div>
@@ -103,17 +103,17 @@ export default async function CustomerDetailsPage({
                     </Card>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Card className="bg-card/30 backdrop-blur-sm">
+                        <Card>
                             <CardHeader>
                                 <CardTitle className="text-md flex items-center gap-2">
-                                    <Zap className="w-4 h-4 text-orange-500" /> Key Pain Points
+                                    <Zap className="w-4 h-4" /> Key Pain Points
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <ul className="space-y-3">
                                     {customer.pain_points?.length ? customer.pain_points.map((point: string, i: number) => (
-                                        <li key={i} className="flex gap-3 text-sm p-3 rounded-lg bg-red-500/5 border border-red-500/10">
-                                            <span className="font-semibold text-red-500">•</span>
+                                        <li key={i} className="flex gap-3 text-sm p-3 rounded-lg bg-muted border">
+                                            <span className="font-semibold">•</span>
                                             {point}
                                         </li>
                                     )) : (
@@ -123,17 +123,17 @@ export default async function CustomerDetailsPage({
                             </CardContent>
                         </Card>
 
-                        <Card className="bg-card/30 backdrop-blur-sm">
+                        <Card>
                             <CardHeader>
                                 <CardTitle className="text-md flex items-center gap-2">
-                                    <Target className="w-4 h-4 text-green-500" /> Strategic Goals
+                                    <Target className="w-4 h-4" /> Strategic Goals
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <ul className="space-y-3">
                                     {customer.goals?.length ? customer.goals.map((goal: string, i: number) => (
-                                        <li key={i} className="flex gap-3 text-sm p-3 rounded-lg bg-green-500/5 border border-green-500/10">
-                                            <span className="font-semibold text-green-500">•</span>
+                                        <li key={i} className="flex gap-3 text-sm p-3 rounded-lg bg-muted border">
+                                            <span className="font-semibold">•</span>
                                             {goal}
                                         </li>
                                     )) : (
@@ -163,7 +163,7 @@ export default async function CustomerDetailsPage({
                 </TabsContent>
 
                 <TabsContent value="notes">
-                    <Card className="bg-card/50">
+                    <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div>
                                 <CardTitle>Raw Research Logs</CardTitle>
@@ -172,7 +172,7 @@ export default async function CustomerDetailsPage({
                             <Button variant="ghost" size="sm">Download Logs</Button>
                         </CardHeader>
                         <CardContent className="border-t pt-6">
-                            <pre className="whitespace-pre-wrap text-sm font-mono p-6 bg-muted/50 rounded-xl leading-relaxed">
+                            <pre className="whitespace-pre-wrap text-sm font-mono p-6 bg-muted rounded-lg leading-relaxed">
                                 {customer.raw_notes || "No research data available for this customer."}
                             </pre>
                         </CardContent>
