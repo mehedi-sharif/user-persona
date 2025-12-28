@@ -17,8 +17,9 @@
   --accent-foreground: #18181b;
   --destructive: #ef4444;
   --destructive-foreground: #fafafa;
-  --border: #e4e4e7;
-  --input: #e4e4e7;
+  --border: #dedede;
+  --input: #dedede;
+  --input-focus: #b8b8b8;
   --ring: #18181b;
   --radius: 0.5rem;
 }
@@ -48,4 +49,12 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
+}
+
+/* Custom input and textarea focus styles */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--input-focus) !important;
+  outline: none;
 }
