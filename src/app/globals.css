@@ -58,3 +58,14 @@ select:focus {
   border-color: var(--input-focus) !important;
   outline: none;
 }
+/* Ensure all border-bottom uses #dedede */
+.border-b,
+[class*="border-b"] {
+  border-bottom-color: #dedede !important;
+}
+
+/* Ensure all border-top uses #dedede */
+.border-t,
+[class*="border-t"] {
+  border-top-color: #dedede !important;
+}
