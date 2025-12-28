@@ -141,24 +141,42 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Left Column: Basic Info */}
-                <div className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Left Column: Basic Info - 8 columns (2/3 width) */}
+                <div className="lg:col-span-8 space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Basic Information</CardTitle>
                             <CardDescription>Core demographics and contact info.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="name">Full Name</Label>
-                                <Input
-                                    id="name"
-                                    value={formData.full_name}
-                                    onChange={e => setFormData(prev => ({ ...prev, full_name: e.target.value }))}
-                                    placeholder="e.g. Sarah J. Mitchell"
-                                    required
-                                />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="first_name">First Name</Label>
+                                    <Input
+                                        id="first_name"
+                                        value={formData.full_name?.split(' ')[0] || ""}
+                                        onChange={e => {
+                                            const lastName = formData.full_name?.split(' ').slice(1).join(' ') || "";
+                                            setFormData(prev => ({ ...prev, full_name: `${e.target.value} ${lastName}`.trim() }))
+                                        }}
+                                        placeholder="e.g. Sarah"
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="last_name">Last Name</Label>
+                                    <Input
+                                        id="last_name"
+                                        value={formData.full_name?.split(' ').slice(1).join(' ') || ""}
+                                        onChange={e => {
+                                            const firstName = formData.full_name?.split(' ')[0] || "";
+                                            setFormData(prev => ({ ...prev, full_name: `${firstName} ${e.target.value}`.trim() }))
+                                        }}
+                                        placeholder="e.g. Mitchell"
+                                        required
+                                    />
+                                </div>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="email">Email Address</Label>
@@ -248,7 +266,10 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                             </div>
                         </CardContent>
                     </Card>
+                </div>
 
+                {/* Right Column: Persona Analysis & Pain Points/Goals - 4 columns (1/3 width) */}
+                <div className="lg:col-span-4 space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
@@ -272,10 +293,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                             </Button>
                         </CardContent>
                     </Card>
-                </div>
 
-                {/* Right Column: Pain Points & Goals */}
-                <div className="space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle className="text-md font-semibold">Pain Points</CardTitle>
