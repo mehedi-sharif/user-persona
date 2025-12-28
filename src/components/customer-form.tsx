@@ -141,9 +141,9 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left Column: Basic Info */}
-                <div className="lg:col-span-1 space-y-6">
+                <div className="space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Basic Information</CardTitle>
@@ -274,100 +274,79 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                     </Card>
                 </div>
 
-                {/* Right Column: Deep Research */}
-                <div className="lg:col-span-2 space-y-6">
-                    <Card className="shadow-lg">
+                {/* Right Column: Pain Points & Goals */}
+                <div className="space-y-6">
+                    <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Brain className="w-5 h-5 text-primary" /> Raw Research Input
-                            </CardTitle>
-                            <CardDescription>
-                                Paste interview transcripts, customer feedback, or raw field notes.
-                            </CardDescription>
+                            <CardTitle className="text-md font-semibold">Pain Points</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <Textarea
-                                className="min-h-[300px] font-mono text-sm leading-relaxed"
-                                value={formData.raw_notes || ""}
-                                onChange={e => setFormData(prev => ({ ...prev, raw_notes: e.target.value }))}
-                                placeholder="--- Research Session: Oct 2023 ---&#10;Customer mentioned they struggle with..."
-                            />
+                        <CardContent className="space-y-4">
+                            <div className="flex gap-2">
+                                <Input
+                                    placeholder="Add pain point..."
+                                    value={newPainPoint}
+                                    onChange={e => setNewPainPoint(e.target.value)}
+                                    onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addPainPoint())}
+                                />
+                                <Button type="button" size="icon" onClick={addPainPoint}>
+                                    <Plus className="w-4 h-4" />
+                                </Button>
+                            </div>
+                            <div className="space-y-2">
+                                {(formData.pain_points || []).map((point, i) => (
+                                    <div key={i} className="flex items-center justify-between p-2 rounded-md bg-muted text-sm border border-border/50 group">
+                                        <span className="truncate pr-2">{point}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removePainPoint(i)}
+                                            className="text-muted-foreground hover:text-destructive transition-colors px-1"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                                {(formData.pain_points || []).length === 0 && (
+                                    <p className="text-xs text-muted-foreground italic">No pain points added.</p>
+                                )}
+                            </div>
                         </CardContent>
                     </Card>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-md font-semibold">Pain Points</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex gap-2">
-                                    <Input
-                                        placeholder="Add pain point..."
-                                        value={newPainPoint}
-                                        onChange={e => setNewPainPoint(e.target.value)}
-                                        onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addPainPoint())}
-                                    />
-                                    <Button type="button" size="icon" onClick={addPainPoint}>
-                                        <Plus className="w-4 h-4" />
-                                    </Button>
-                                </div>
-                                <div className="space-y-2">
-                                    {(formData.pain_points || []).map((point, i) => (
-                                        <div key={i} className="flex items-center justify-between p-2 rounded-md bg-muted text-sm border border-border/50 group">
-                                            <span className="truncate pr-2">{point}</span>
-                                            <button
-                                                type="button"
-                                                onClick={() => removePainPoint(i)}
-                                                className="text-muted-foreground hover:text-destructive transition-colors px-1"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    ))}
-                                    {(formData.pain_points || []).length === 0 && (
-                                        <p className="text-xs text-muted-foreground italic">No pain points added.</p>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-md font-semibold">Strategic Goals</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex gap-2">
-                                    <Input
-                                        placeholder="Add goal..."
-                                        value={newGoal}
-                                        onChange={e => setNewGoal(e.target.value)}
-                                        onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addGoal())}
-                                    />
-                                    <Button type="button" size="icon" onClick={addGoal}>
-                                        <Plus className="w-4 h-4" />
-                                    </Button>
-                                </div>
-                                <div className="space-y-2">
-                                    {(formData.goals || []).map((goal, i) => (
-                                        <div key={i} className="flex items-center justify-between p-2 rounded-md bg-muted text-sm border border-border/50">
-                                            <span className="truncate pr-2">{goal}</span>
-                                            <button
-                                                type="button"
-                                                onClick={() => removeGoal(i)}
-                                                className="text-muted-foreground hover:text-destructive transition-colors px-1"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    ))}
-                                    {(formData.goals || []).length === 0 && (
-                                        <p className="text-xs text-muted-foreground italic">No goals added.</p>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="text-md font-semibold">Strategic Goals</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex gap-2">
+                                <Input
+                                    placeholder="Add goal..."
+                                    value={newGoal}
+                                    onChange={e => setNewGoal(e.target.value)}
+                                    onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addGoal())}
+                                />
+                                <Button type="button" size="icon" onClick={addGoal}>
+                                    <Plus className="w-4 h-4" />
+                                </Button>
+                            </div>
+                            <div className="space-y-2">
+                                {(formData.goals || []).map((goal, i) => (
+                                    <div key={i} className="flex items-center justify-between p-2 rounded-md bg-muted text-sm border border-border/50">
+                                        <span className="truncate pr-2">{goal}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeGoal(i)}
+                                            className="text-muted-foreground hover:text-destructive transition-colors px-1"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                                {(formData.goals || []).length === 0 && (
+                                    <p className="text-xs text-muted-foreground italic">No goals added.</p>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </form>
