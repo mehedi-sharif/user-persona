@@ -49,8 +49,8 @@ export default async function CustomerDetailsPage({
                     </div>
                     <div>
                         <div className="flex items-center gap-3">
-                            <h1 className="text-4xl font-bold tracking-tight">{customer.name}</h1>
-                            <Badge variant="outline" className="h-6">Persona ID: {customer.id.slice(0, 8)}</Badge>
+                            <h1 className="text-4xl font-bold tracking-tight">{customer.full_name}</h1>
+                            <Badge variant="outline" className="h-6">Persona ID: {customer._id.slice(0, 8)}</Badge>
                         </div>
                         <p className="text-xl text-muted-foreground font-medium mt-1">{customer.job_title || "Strategic Consultant"}</p>
                         <div className="flex gap-4 mt-3">
@@ -60,7 +60,7 @@ export default async function CustomerDetailsPage({
                             </div>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Calendar className="w-4 h-4" />
-                                Updated {customer.last_researched ? new Date(customer.last_researched).toLocaleDateString() : 'Never'}
+                                Updated {customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : 'Never'}
                             </div>
                         </div>
                     </div>
@@ -154,7 +154,7 @@ export default async function CustomerDetailsPage({
                                 <div className="p-4 bg-muted rounded-full w-16 h-16 mx-auto flex items-center justify-center">
                                     <Target className="w-8 h-8 opacity-50" />
                                 </div>
-                                <p>Psychographic mapping allows you to understand the "Why" behind {customer.name}'s actions. Complete the research form to see details here.</p>
+                                <p>Psychographic mapping allows you to understand the "Why" behind {customer.full_name}'s actions. Complete the research form to see details here.</p>
                             </div>
                         </CardContent>
                     </Card>
