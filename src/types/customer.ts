@@ -5,6 +5,7 @@ export type Customer = {
     image: string | null
     country: string | null
     createdAt: string
+    orders?: any[] // Array of orders for paid customers
     // Keep these for potential future use or transition
     job_title?: string | null
     raw_notes?: string | null

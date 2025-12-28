@@ -92,15 +92,23 @@ export const columns: ColumnDef<Customer>[] = [
     {
         accessorKey: "status",
         header: () => <div className="text-right pr-4">Status</div>,
-        cell: () => (
-            <div className="flex justify-end pr-4">
-                <Badge
-                    variant="outline"
-                    className="bg-red-50 text-red-600 border-red-100 hover:bg-red-50 text-[11px] font-semibold py-0 h-6 px-2"
-                >
-                    No Purchase
-                </Badge>
-            </div>
-        ),
+        cell: ({ row }) => {
+            const customer = row.original
+            const isPaid = customer.orders && customer.orders.length > 0
+
+            return (
+                <div className="flex justify-end pr-4">
+                    <Badge
+                        variant="outline"
+                        className={isPaid
+                            ? "bg-green-50 text-green-600 border-green-200 hover:bg-green-50 text-[11px] font-semibold py-0 h-6 px-2"
+                            : "bg-red-50 text-red-600 border-red-100 hover:bg-red-50 text-[11px] font-semibold py-0 h-6 px-2"
+                        }
+                    >
+                        {isPaid ? 'Paid' : 'No Purchase'}
+                    </Badge>
+                </div>
+            )
+        },
     },
 ]
