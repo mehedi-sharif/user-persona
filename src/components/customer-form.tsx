@@ -36,13 +36,20 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
     const [formData, setFormData] = useState<CustomerInsert>({
         full_name: initialData?.full_name || "",
         email: initialData?.email || "",
-        job_title: initialData?.job_title || "",
-        raw_notes: initialData?.raw_notes || "",
+        job_title: initialData?.job_title || undefined,
+        company: initialData?.company || undefined,
+        industry: initialData?.industry || undefined,
+        linkedin_profile: initialData?.linkedin_profile || undefined,
+        phone: initialData?.phone || undefined,
+        website: initialData?.website || undefined,
+        bio: initialData?.bio || undefined,
+        raw_notes: initialData?.raw_notes || undefined,
         pain_points: initialData?.pain_points || [],
         goals: initialData?.goals || [],
-        persona_summary: initialData?.persona_summary || "",
-        image: initialData?.image || null,
-        country: initialData?.country || null,
+        persona_summary: initialData?.persona_summary || undefined,
+        image: initialData?.image || undefined,
+        country: initialData?.country || undefined,
+        api_user_id: initialData?.api_user_id || undefined,
     })
 
     const [newPainPoint, setNewPainPoint] = useState("")
@@ -53,18 +60,34 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
         setLoading(true)
 
         try {
-            if (initialData?._id) {
+            // Prepare data for Supabase
+            const dataToSave = {
+                ...formData,
+                api_user_id: initialData?._id || formData.api_user_id, // Use API ID as reference
+            }
+
+            // Check if record exists
+            const { data: existing } = await supabase
+                .from("customers")
+                .select("id")
+                .eq("api_user_id", dataToSave.api_user_id)
+                .single()
+
+            if (existing) {
+                // Update existing record
                 const { error } = await supabase
                     .from("customers")
-                    .update({ ...formData })
-                    .eq("id", initialData._id)
+                    .update(dataToSave)
+                    .eq("api_user_id", dataToSave.api_user_id)
                 if (error) throw error
             } else {
+                // Insert new record
                 const { error } = await supabase
                     .from("customers")
-                    .insert([formData])
+                    .insert([dataToSave])
                 if (error) throw error
             }
+
             router.push("/customers")
             router.refresh()
         } catch (error) {
@@ -155,6 +178,72 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                                     value={formData.job_title || ""}
                                     onChange={e => setFormData(prev => ({ ...prev, job_title: e.target.value }))}
                                     placeholder="e.g. Senior Marketing Manager"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="company">Company</Label>
+                                <Input
+                                    id="company"
+                                    value={formData.company || ""}
+                                    onChange={e => setFormData(prev => ({ ...prev, company: e.target.value }))}
+                                    placeholder="e.g. Acme Corp"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="industry">Industry</Label>
+                                <Input
+                                    id="industry"
+                                    value={formData.industry || ""}
+                                    onChange={e => setFormData(prev => ({ ...prev, industry: e.target.value }))}
+                                    placeholder="e.g. SaaS, Healthcare, Finance"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="linkedin">LinkedIn Profile</Label>
+                                <Input
+                                    id="linkedin"
+                                    value={formData.linkedin_profile || ""}
+                                    onChange={e => setFormData(prev => ({ ...prev, linkedin_profile: e.target.value }))}
+                                    placeholder="https://linkedin.com/in/username"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="phone">Phone</Label>
+                                <Input
+                                    id="phone"
+                                    type="tel"
+                                    value={formData.phone || ""}
+                                    onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                                    placeholder="+1 (555) 123-4567"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="website">Website</Label>
+                                <Input
+                                    id="website"
+                                    type="url"
+                                    value={formData.website || ""}
+                                    onChange={e => setFormData(prev => ({ ...prev, website: e.target.value }))}
+                                    placeholder="https://example.com"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="country">Country</Label>
+                                <Input
+                                    id="country"
+                                    value={formData.country || ""}
+                                    onChange={e => setFormData(prev => ({ ...prev, country: e.target.value }))}
+                                    placeholder="e.g. United States"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="bio">Bio</Label>
+                                <Textarea
+                                    id="bio"
+                                    value={formData.bio || ""}
+                                    onChange={e => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+                                    placeholder="Short bio or description..."
+                                    className="min-h-[80px]"
                                 />
                             </div>
                         </CardContent>

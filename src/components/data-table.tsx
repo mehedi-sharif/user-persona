@@ -138,7 +138,7 @@ export function DataTable<TData, TValue>({
                                 <SelectValue placeholder="Filter by status" />
                             </div>
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white">
                             <SelectItem value="all">All Customers</SelectItem>
                             <SelectItem value="paid">Paid Only</SelectItem>
                             <SelectItem value="free">Free Only</SelectItem>
