@@ -34,13 +34,15 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
     const [loading, setLoading] = useState(false)
 
     const [formData, setFormData] = useState<CustomerInsert>({
-        name: initialData?.name || "",
+        full_name: initialData?.full_name || "",
         email: initialData?.email || "",
         job_title: initialData?.job_title || "",
         raw_notes: initialData?.raw_notes || "",
         pain_points: initialData?.pain_points || [],
         goals: initialData?.goals || [],
         persona_summary: initialData?.persona_summary || "",
+        image: initialData?.image || null,
+        country: initialData?.country || null,
     })
 
     const [newPainPoint, setNewPainPoint] = useState("")
@@ -51,11 +53,11 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
         setLoading(true)
 
         try {
-            if (initialData?.id) {
+            if (initialData?._id) {
                 const { error } = await supabase
                     .from("customers")
-                    .update({ ...formData, last_researched: new Date().toISOString() })
-                    .eq("id", initialData.id)
+                    .update({ ...formData })
+                    .eq("id", initialData._id)
                 if (error) throw error
             } else {
                 const { error } = await supabase
@@ -75,7 +77,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
 
     const addPainPoint = () => {
         if (newPainPoint.trim()) {
-            setFormData(prev => ({ ...prev, pain_points: [...prev.pain_points, newPainPoint.trim()] }))
+            setFormData(prev => ({ ...prev, pain_points: [...(prev.pain_points || []), newPainPoint.trim()] }))
             setNewPainPoint("")
         }
     }
@@ -83,13 +85,13 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
     const removePainPoint = (index: number) => {
         setFormData(prev => ({
             ...prev,
-            pain_points: prev.pain_points.filter((_, i) => i !== index),
+            pain_points: (prev.pain_points || []).filter((_, i) => i !== index),
         }))
     }
 
     const addGoal = () => {
         if (newGoal.trim()) {
-            setFormData(prev => ({ ...prev, goals: [...prev.goals, newGoal.trim()] }))
+            setFormData(prev => ({ ...prev, goals: [...(prev.goals || []), newGoal.trim()] }))
             setNewGoal("")
         }
     }
@@ -97,7 +99,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
     const removeGoal = (index: number) => {
         setFormData(prev => ({
             ...prev,
-            goals: prev.goals.filter((_, i) => i !== index),
+            goals: (prev.goals || []).filter((_, i) => i !== index),
         }))
     }
 
@@ -105,7 +107,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
         <form onSubmit={handleSubmit} className="space-y-8 pb-20">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">
-                    {initialData ? `Edit ${initialData.name}` : "Add New Customer"}
+                    {initialData ? `Edit ${initialData.full_name}` : "Add New Customer"}
                 </h1>
                 <div className="flex gap-3">
                     <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
@@ -129,8 +131,8 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                                 <Label htmlFor="name">Full Name</Label>
                                 <Input
                                     id="name"
-                                    value={formData.name}
-                                    onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                                    value={formData.full_name}
+                                    onChange={e => setFormData(prev => ({ ...prev, full_name: e.target.value }))}
                                     placeholder="e.g. Sarah J. Mitchell"
                                     required
                                 />
@@ -222,7 +224,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                                     </Button>
                                 </div>
                                 <div className="space-y-2">
-                                    {formData.pain_points.map((point, i) => (
+                                    {(formData.pain_points || []).map((point, i) => (
                                         <div key={i} className="flex items-center justify-between p-2 rounded-md bg-muted text-sm border border-border/50 group">
                                             <span className="truncate pr-2">{point}</span>
                                             <button
@@ -234,7 +236,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                                             </button>
                                         </div>
                                     ))}
-                                    {formData.pain_points.length === 0 && (
+                                    {(formData.pain_points || []).length === 0 && (
                                         <p className="text-xs text-muted-foreground italic">No pain points added.</p>
                                     )}
                                 </div>
@@ -258,7 +260,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                                     </Button>
                                 </div>
                                 <div className="space-y-2">
-                                    {formData.goals.map((goal, i) => (
+                                    {(formData.goals || []).map((goal, i) => (
                                         <div key={i} className="flex items-center justify-between p-2 rounded-md bg-muted text-sm border border-border/50">
                                             <span className="truncate pr-2">{goal}</span>
                                             <button
@@ -270,7 +272,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                                             </button>
                                         </div>
                                     ))}
-                                    {formData.goals.length === 0 && (
+                                    {(formData.goals || []).length === 0 && (
                                         <p className="text-xs text-muted-foreground italic">No goals added.</p>
                                     )}
                                 </div>
