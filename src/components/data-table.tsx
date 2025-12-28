@@ -21,7 +21,8 @@ import {
     ChevronLeft,
     ChevronRight,
     ChevronsLeft,
-    ChevronsRight
+    ChevronsRight,
+    Filter
 } from "lucide-react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 
@@ -36,6 +37,13 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import {
     Table,
     TableBody,
@@ -64,9 +72,22 @@ export function DataTable<TData, TValue>({
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
+    const [paymentFilter, setPaymentFilter] = React.useState<string>("all")
+
+    // Filter data based on payment status
+    const filteredData = React.useMemo(() => {
+        if (paymentFilter === "all") return data
+
+        return data.filter((item: any) => {
+            const hasOrders = item.orders && item.orders.length > 0
+            if (paymentFilter === "paid") return hasOrders
+            if (paymentFilter === "free") return !hasOrders
+            return true
+        })
+    }, [data, paymentFilter])
 
     const table = useReactTable({
-        data,
+        data: filteredData,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -107,6 +128,22 @@ export function DataTable<TData, TValue>({
                         }
                         className="h-10 border-gray-200 rounded-md bg-white shadow-sm placeholder:text-gray-400"
                     />
+                </div>
+
+                <div className="ml-3">
+                    <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+                        <SelectTrigger className="h-10 w-[160px] border-gray-200 rounded-md bg-white shadow-sm">
+                            <div className="flex items-center gap-2">
+                                <Filter className="h-4 w-4 text-gray-500" />
+                                <SelectValue placeholder="Filter by status" />
+                            </div>
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Customers</SelectItem>
+                            <SelectItem value="paid">Paid Only</SelectItem>
+                            <SelectItem value="free">Free Only</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 <div className="ml-auto flex items-center gap-6">
