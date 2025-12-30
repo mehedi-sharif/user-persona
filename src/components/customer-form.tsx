@@ -142,14 +142,77 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* Left Column: Basic Info - 8 columns (2/3 width) */}
-                <div className="lg:col-span-8 space-y-6">
+                {/* Left Column: Basic Info - 6 columns (50% width) */}
+                <div className="lg:col-span-6 space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Basic Information</CardTitle>
                             <CardDescription>Core demographics and contact info.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
+                            {/* User Image Upload */}
+                            <div className="space-y-2">
+                                <Label>Profile Image</Label>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-20 h-20 rounded-lg border-2 border-dashed border-[#dedede] flex items-center justify-center overflow-hidden bg-muted">
+                                        {formData.image ? (
+                                            <img
+                                                src={formData.image}
+                                                alt="Profile"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <span className="text-xs text-muted-foreground text-center px-2">No image</span>
+                                        )}
+                                    </div>
+                                    <div className="flex-1 space-y-2">
+                                        <div className="flex gap-2">
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => document.getElementById('image-upload')?.click()}
+                                                className="gap-2"
+                                            >
+                                                <Plus className="w-4 h-4" />
+                                                {formData.image ? 'Change Image' : 'Upload Image'}
+                                            </Button>
+                                            {formData.image && (
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => setFormData(prev => ({ ...prev, image: undefined }))}
+                                                    className="gap-2"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                    Remove
+                                                </Button>
+                                            )}
+                                        </div>
+                                        <input
+                                            id="image-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0]
+                                                if (file) {
+                                                    const reader = new FileReader()
+                                                    reader.onloadend = () => {
+                                                        setFormData(prev => ({ ...prev, image: reader.result as string }))
+                                                    }
+                                                    reader.readAsDataURL(file)
+                                                }
+                                            }}
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            Upload a profile image (JPG, PNG, or GIF)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="first_name">First Name</Label>
@@ -268,8 +331,8 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
                     </Card>
                 </div>
 
-                {/* Right Column: Persona Analysis & Pain Points/Goals - 4 columns (1/3 width) */}
-                <div className="lg:col-span-4 space-y-6">
+                {/* Right Column: Persona Analysis & Pain Points/Goals - 6 columns (50% width) */}
+                <div className="lg:col-span-6 space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
